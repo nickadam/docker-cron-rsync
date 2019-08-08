@@ -15,11 +15,20 @@ fi
 
 if [ ! -z "$IDENTITY_FILE" ]
 then
+
   cp "$IDENTITY_FILE" /id_rsa
   chmod 600 /id_rsa
   command="rsync -a --delete -e 'ssh -i /id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $PORT' $SOURCE $DESTINATION"
+
+elif [ ! -z "$DOCKER_WEAK_SSH_HOST" ]
+then
+  
+  command="curl -o /id_rsa $DOCKER_WEAK_SSH_HOST; chmod 600 /id_rsa; rsync -a --delete -e 'ssh -i /id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $PORT' $SOURCE $DESTINATION"
+
 else
+
   command="rsync -a --delete $SOURCE $DESTINATION"
+
 fi
 
 echo -e "$CRON_SCHEDULE $command" | crontab -

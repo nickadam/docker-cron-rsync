@@ -1,27 +1,25 @@
 version: '3.5'
 services:
+  weak:
+    image: nickadam/docker-weak-ssh:1.1
+    volumes:
+      - type: volume
+        source: backup
+        target: /backup
   daemon:
     image: nickadam/docker-cron-rsync:1.1
     build: .
     environment:
       CRON_SCHEDULE: '* * * * *'
       SOURCE: /data/
-      DESTINATION: /backup/
-      #DOCKER_WEAK_SSH_HOST: weak
-      #IDENTITY_FILE: /run/secrets/id_rsa
-      #PORT: 2222
+      DESTINATION: 'weak:/backup/'
+      DOCKER_WEAK_SSH_HOST: weak
     volumes:
       - type: volume
         source: data
         target: /data
-      - type: volume
-        source: backup
-        target: /backup
-    #secrets:
-    #  - id_rsa
+    depends_on:
+      - weak
 volumes:
   data:
   backup:
-#secrets:
-#  id_rsa:
-#    external: true
