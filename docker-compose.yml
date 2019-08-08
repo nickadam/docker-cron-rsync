@@ -1,0 +1,26 @@
+version: '3.5'
+services:
+  daemon:
+    image: nickadam/docker-cron-rsync:1.0
+    build: .
+    environment:
+      CRON_SCHEDULE: '* * * * *'
+      SOURCE: /data/
+      DESTINATION: /backup/
+      #IDENTITY_FILE: /run/secrets/id_rsa
+      #PORT: 2222
+    volumes:
+      - type: volume
+        source: data
+        target: /data
+      - type: volume
+        source: backup
+        target: /backup
+    #secrets:
+    #  - id_rsa
+volumes:
+  data:
+  backup:
+#secrets:
+#  id_rsa:
+#    external: true
