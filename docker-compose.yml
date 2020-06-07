@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   daemon:
-    image: nickadam/docker-cron-rsync:1.1
+    image: nickadam/docker-cron-rsync:1.2
     build: .
     environment:
       CRON_SCHEDULE: '* * * * *'
